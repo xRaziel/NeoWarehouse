@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfig } from './config/database.config';
 import { MovementsModule } from './modules/movements/movements.module';
 import { ProductModule } from './modules/product/product.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { ProductModule } from './modules/product/product.module';
     }),
     ProductModule, 
     MovementsModule, 
-    IntegrationModule, ProductModule
+    IntegrationModule, ProductModule, CategoryModule
   ],
   controllers: [
     AppController

@@ -4,7 +4,7 @@ import { IntegrationController } from './integration.controller';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from 'src/infrastructure/database/entities/category.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from 'src/infrastructure/database/entities/product.entity';
 
 @Module({
   controllers: [IntegrationController],

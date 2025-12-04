@@ -20,14 +20,25 @@ export class ProductRepository {
         return this.productRepository.findOne({ where: { sku: sku } });
     }
 
+    async findProductsByCategory(categoryName: string): Promise<Product[]> {
+        return this.productRepository.createQueryBuilder('product')
+            .leftJoinAndSelect('product.category', 'category')
+            .where('category.nombre = :categoryName', { categoryName })
+            .getMany();
+    }
+
     async createProduct(productData: Partial<Product>): Promise<Product> {
         const newProduct = this.productRepository.create(productData);
         return this.productRepository.save(newProduct);
     }
 
     async updateProduct(sku: string, updateData: Partial<Product>): Promise<Product | null> {
-        await this.productRepository.update(sku, updateData);
-        return this.productRepository.findOne({ where: { sku } });
+        const product = await this.findProductBySKU(sku);
+        if (!product) {
+            return null;
+        }
+        Object.assign(product, updateData);
+        return this.productRepository.save(product);
     }
 
     async removeProduct(sku: string): Promise<void> {

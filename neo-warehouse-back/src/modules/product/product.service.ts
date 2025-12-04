@@ -1,26 +1,57 @@
 import { Injectable } from '@nestjs/common';
+import { Product } from 'src/infrastructure/database/entities/product.entity';
+import { ProductRepository } from 'src/infrastructure/database/repositories/product.repository';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CategoryRepository } from 'src/infrastructure/database/repositories/category.repository';
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  
+  constructor(
+    private readonly productRepository: ProductRepository,
+    private readonly categoryRepository: CategoryRepository,
+  ) {}
+
+  async getAllProducts() : Promise<Product[]> {
+    return this.productRepository.obtainAllProducts();
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async getProductBySKU(sku: string) : Promise<Product | null> {
+    return this.productRepository.findProductBySKU(sku);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async getProductsByCategory(category: string) : Promise<Product[]> {
+    return this.productRepository.findProductsByCategory(category);
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async createProduct(productData: CreateProductDto) : Promise<Product> {
+
+    if (!productData.categoria_id) {
+      throw new Error('categoria_id is required');
+    }
+
+    const category = await this.getCategoryByName(productData.categoria_id);
+    
+    if (!category) {
+      throw new Error(`Category with name "${productData.categoria_id}" not found`);
+    }
+
+    const product = new Product();
+    product.nombre = productData.nombre;
+    product.precio = productData.precio;
+    product.stock = productData.stock;
+    product.idExterno = productData.id_externo || '';
+    product.sku = productData.sku;
+    product.category = category;
+    return this.productRepository.createProduct(product);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async updateProductStock(sku: string, newStock: number) : Promise<Product | null> {
+    return this.productRepository.updateProduct(sku, { stock: newStock });
+    
+  }
+
+  private async getCategoryByName(categoryName: string) {
+    return this.categoryRepository.findCategoryByName(categoryName);
   }
 }
