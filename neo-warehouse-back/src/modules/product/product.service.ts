@@ -13,7 +13,10 @@ export class ProductService {
   ) {}
 
   async getAllProducts() : Promise<Product[]> {
-    return this.productRepository.obtainAllProducts();
+    const products = await this.productRepository.obtainAllProducts();
+    console.log('products:',products);
+    
+    return products;
   }
 
   async getProductBySKU(sku: string) : Promise<Product | null> {

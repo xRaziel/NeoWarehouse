@@ -13,11 +13,11 @@ export class ProductRepository {
     ) {}
 
     async obtainAllProducts(): Promise<Product[]> {
-        return this.productRepository.find();
+        return this.productRepository.find({ relations: ['category'] });
     }
 
     async findProductBySKU(sku: string): Promise<Product | null> {
-        return this.productRepository.findOne({ where: { sku: sku } });
+        return this.productRepository.findOne({ where: { sku: sku }, relations: ['category'] });
     }
 
     async findProductsByCategory(categoryName: string): Promise<Product[]> {
