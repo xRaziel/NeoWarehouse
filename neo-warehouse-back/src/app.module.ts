@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsModule } from './products/products.module';
-import { MovementsModule } from './movements/movements.module';
 import { IntegrationModule } from './integration/integration.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfig } from './config/database.config';
+import { MovementsModule } from './modules/movements/movements.module';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -19,9 +19,9 @@ import { getDatabaseConfig } from './config/database.config';
       useFactory: getDatabaseConfig,
       inject: [ConfigService],
     }),
-    ProductsModule, 
+    ProductModule, 
     MovementsModule, 
-    IntegrationModule
+    IntegrationModule, ProductModule
   ],
   controllers: [
     AppController
