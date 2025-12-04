@@ -29,4 +29,9 @@ export class CategoryRepository {
     async removeCategory(name: string): Promise<void> {
         await this.categoryRepository.delete({ nombre: name });
     }
+
+    async addCategory(name: string): Promise<Category> {
+        const newCategory = this.categoryRepository.create({ nombre: name });
+        return this.categoryRepository.save(newCategory);
+    }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, BadRequestException, NotFoundException, Post, Body, Put } from '@nestjs/common';
+import { Controller, Get, Param, BadRequestException, NotFoundException, Post, Body, Put, Delete } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ApiOperation, ApiTags, ApiParam } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -121,6 +121,24 @@ export class ProductController {
       }
 
       return { status: 'success', data: updatedProduct };
+    } catch (error) {
+      return { status: 'error', message: error.message };
+    }
+  }
+
+  @Delete("/deleteProduct/:sku")
+  @ApiOperation({ summary: 'Delete a product by SKU' })
+  @ApiParam({ name: 'sku', description: 'Product SKU', example: 'SKU123' })
+  async deleteProduct(@Param('sku') sku: string) {
+    try{
+      // Validar que SKU no esté vacío
+      if (!sku || sku.trim().length === 0) {
+        throw new BadRequestException('SKU cannot be empty');
+      }
+
+      await this.productService.deleteProduct(sku.trim());
+
+      return { status: 'success', message: `Product with SKU "${sku}" has been deleted` };
     } catch (error) {
       return { status: 'error', message: error.message };
     }

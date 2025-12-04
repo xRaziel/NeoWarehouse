@@ -51,6 +51,10 @@ export class ProductService {
     
   }
 
+  async deleteProduct(sku: string) : Promise<void> {
+    return this.productRepository.removeProduct(sku);
+  }
+
   private async getCategoryByName(categoryName: string) {
     return this.categoryRepository.findCategoryByName(categoryName);
   }
