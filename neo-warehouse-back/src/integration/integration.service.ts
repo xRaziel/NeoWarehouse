@@ -75,6 +75,7 @@ export class IntegrationService {
             precio: prod.price,
             stock: prod.stock,
             idExterno: prod.id.toString(),
+            sku: prod.sku,
             category: category
           });
           await queryRunner.manager.save(newProduct);
@@ -99,7 +100,7 @@ export class IntegrationService {
 
   private async fetchProductsFromAPI(): Promise<any[]> {
     try{
-      const url = `${this.apiURL}/products`;
+      const url = `${this.apiURL}/products?limit=100`;
       const response = await fetch(url, {
         method: 'GET',
         headers: {

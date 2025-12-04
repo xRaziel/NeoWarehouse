@@ -21,6 +21,9 @@ export class Product {
     @Column({name: 'id_externo', nullable: true})
     idExterno: string;
 
+    @Column({name: 'sku', nullable: false})
+    sku: string;
+
     @ManyToOne(() => Category, category => category.products)
     @JoinColumn({ name: 'categoria_id' })
     category: Category;

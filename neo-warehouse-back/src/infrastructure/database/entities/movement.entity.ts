@@ -21,6 +21,9 @@ export class Movement {
     @Column({name: 'producto_id'})
     productoId: string;
 
+    @Column({name: 'nota', nullable: true})
+    nota: string;
+
     @ManyToOne(() => Product, product => product.movimientos)
     @JoinColumn({ name: 'producto_id' })
     producto: Product;
