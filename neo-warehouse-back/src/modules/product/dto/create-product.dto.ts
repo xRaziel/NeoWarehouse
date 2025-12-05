@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Category } from "src/infrastructure/database/entities/category.entity";
 
 export class CreateProductDto {
     @ApiProperty({ example: 'Laptop', description: 'Name of the product' })
@@ -18,4 +19,7 @@ export class CreateProductDto {
 
     @ApiProperty({ example: 'Electronics', description: 'Category ID of the product', required: false })
     categoria_id?: string;
+
+    @ApiProperty({ type: () => Category, description: 'Category of the product' })
+    category: Category;
 }

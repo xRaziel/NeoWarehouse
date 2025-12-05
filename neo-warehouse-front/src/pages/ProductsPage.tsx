@@ -1,39 +1,37 @@
 import { useEffect, useRef, useState } from 'react'
 import { obtenerProductos } from '../services/product';
 import { obtenerCategorias } from '../services/category';
+import { crearProducto } from '../services/product';
+import { actualizarProducto } from '../services/product';
 import type { Product } from '../types';
 import CategoryManager from '../shared/CategoryManager';
 import ProductForm from '../shared/ProductForm';
 
 export default function ProductsPage() {
-  //const { products, setProducts, categories, addCategory } = useMockData();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
-  const didFetchRef = useRef(false);
+  const [loading, setLoading] = useState(false);
+  //const didFetchRef = useRef(false);
+
+  async function loadData() {
+    setLoading(true);
+    try{
+        const [productData, categoryData] = await Promise.all([
+            obtenerProductos(),
+            obtenerCategorias()
+        ]);
+        if (productData && Array.isArray(productData.data)) {
+            setProducts(productData.data);
+        }
+        if (categoryData && Array.isArray(categoryData.data)) {
+            setCategories(categoryData.data);
+        }
+
+    }finally { setLoading(false);}
+  }
   
-  useEffect(() => {
-    if (didFetchRef.current) return;
-    didFetchRef.current = true;
-
-    const fetchProductos = async () => {
-        const data = await obtenerProductos();
-
-        if (data && Array.isArray(data.data)) {
-            setProducts(data.data);
-        }
-    };
-
-    const fetchCategorias = async () => {
-        const data = await obtenerCategorias();
-
-        if (data && Array.isArray(data.data)) {
-            setCategories(data.data);
-        }
-    };
-
-    fetchProductos();
-    fetchCategorias();
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<any | null>(null);
@@ -41,19 +39,18 @@ export default function ProductsPage() {
 
   const filtered = !query ? products : products.filter(p => p.nombre.toLowerCase().includes(query.toLowerCase()) || p.category.nombre.toLowerCase().includes(query.toLowerCase()));
 
-  function save(p: any) {
-    if (p.id) {
-      setProducts(prev => prev.map(x => (x.id === p.id ? p : x)));
+  async function save(product: Partial<Product>) {
+    if (product.id) {
+      // update existing
+      await actualizarProducto(product as Product);
     } else {
-      setProducts(prev => [...prev, { ...p, id: Date.now() }]);
+      // create new
+      await crearProducto(product as Omit<Product, "id">);
     }
+    await loadData();
     setOpenForm(false);
     setEditing(null);
   }
-
-  const addCategory = (newCategory: any) => {
-    setCategories(prev => [...prev, newCategory]);
-  };
 
   return (
     <div className="grid grid-cols-3 gap-6">
@@ -104,7 +101,7 @@ export default function ProductsPage() {
 
       <div className="bg-white rounded-2xl shadow p-6 h-fit">
         <h2 className="text-lg font-semibold mb-3">Categorías</h2>
-        <CategoryManager categories={categories} onCreate={addCategory} />
+        <CategoryManager categories={categories} onCreate={() => loadData()} />
       </div>
 
       {openForm && (

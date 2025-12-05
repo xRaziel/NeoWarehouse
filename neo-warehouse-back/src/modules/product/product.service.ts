@@ -13,30 +13,23 @@ export class ProductService {
   ) {}
 
   async getAllProducts() : Promise<Product[]> {
-    const products = await this.productRepository.obtainAllProducts();
-    console.log('products:',products);
-    
-    return products;
+    return await this.productRepository.obtainAllProducts();
   }
 
   async getProductBySKU(sku: string) : Promise<Product | null> {
-    return this.productRepository.findProductBySKU(sku);
+    return await this.productRepository.findProductBySKU(sku);
   }
 
   async getProductsByCategory(category: string) : Promise<Product[]> {
-    return this.productRepository.findProductsByCategory(category);
+    return await this.productRepository.findProductsByCategory(category);
   }
 
   async createProduct(productData: CreateProductDto) : Promise<Product> {
 
-    if (!productData.categoria_id) {
-      throw new Error('categoria_id is required');
-    }
-
-    const category = await this.getCategoryByName(productData.categoria_id);
+    const category = await this.getCategoryByName(productData.category.nombre);
     
     if (!category) {
-      throw new Error(`Category with name "${productData.categoria_id}" not found`);
+      throw new Error(`Category with name "${productData.category.nombre}" not found`);
     }
 
     const product = new Product();
@@ -50,12 +43,19 @@ export class ProductService {
   }
 
   async updateProductStock(sku: string, newStock: number) : Promise<Product | null> {
-    return this.productRepository.updateProduct(sku, { stock: newStock });
+    return this.productRepository.updateProductBySKU(sku, { stock: newStock });
     
   }
 
   async deleteProduct(sku: string) : Promise<void> {
     return this.productRepository.removeProduct(sku);
+  }
+
+  async updateProduct(product: Partial<Product>) : Promise<Product | null> {
+    if (!product.sku) {
+        throw new Error('SKU is required for updating a product');
+    }
+    return this.productRepository.updateProduct(product);
   }
 
   private async getCategoryByName(categoryName: string) {

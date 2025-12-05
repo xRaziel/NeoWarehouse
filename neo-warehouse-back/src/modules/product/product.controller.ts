@@ -143,4 +143,22 @@ export class ProductController {
       return { status: 'error', message: error.message };
     }
   }
+
+  @Put("/updateProduct")
+  @ApiOperation({ summary: 'Update a product' })
+  async updateProduct(@Body() body: CreateProductDto) {
+    try{
+
+      if (!body.sku || body.sku.trim().length === 0) {
+        throw new BadRequestException('Product SKU cannot be empty');
+      }
+      const updatedProduct = await this.productService.updateProduct(body);
+      if (!updatedProduct) {
+        throw new NotFoundException(`Product with SKU "${body.sku}" not found`);
+      }
+      return { status: 'success', data: updatedProduct };
+    } catch (error) {
+      return { status: 'error', message: error.message };
+    }
+  }
 }

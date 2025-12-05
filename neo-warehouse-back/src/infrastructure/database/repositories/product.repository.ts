@@ -13,7 +13,7 @@ export class ProductRepository {
     ) {}
 
     async obtainAllProducts(): Promise<Product[]> {
-        return this.productRepository.find({ relations: ['category'] });
+        return this.productRepository.find({ relations: ['category'], order: { nombre: 'ASC' } });
     }
 
     async findProductBySKU(sku: string): Promise<Product | null> {
@@ -32,12 +32,22 @@ export class ProductRepository {
         return this.productRepository.save(newProduct);
     }
 
-    async updateProduct(sku: string, updateData: Partial<Product>): Promise<Product | null> {
+    async updateProductBySKU(sku: string, updateData: Partial<Product>): Promise<Product | null> {
         const product = await this.findProductBySKU(sku);
         if (!product) {
             return null;
         }
         Object.assign(product, updateData);
+        return this.productRepository.save(product);
+    }
+
+    async updateProduct(productData: Partial<Product>): Promise<Product | null> {
+        const sku = productData.sku;
+        const product = await this.findProductBySKU(sku!);
+        if (!product) {
+            return null;
+        }
+        Object.assign(product, productData);
         return this.productRepository.save(product);
     }
 

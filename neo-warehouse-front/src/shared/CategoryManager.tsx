@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { Category } from "../types";
+import { crearCategoria } from "../services/category";
 
 type Props = {
   categories?: Category[];
@@ -15,12 +16,13 @@ export default function CategoryManager({ categories = [], onCreate }: Props) {
     setList(categories);
   }, [categories]);
 
-  function add() {
+  async function add() {
     if (!name.trim()) return;
-    const id = Date.now();
-    const newCat: Category = { id, nombre: name.trim() };
-    setList(prev => [...prev, newCat]);
-    if (onCreate) onCreate(newCat);
+    const newCategory = await crearCategoria(name.trim());
+    if(newCategory && newCategory.id){
+      setList(prev => [...prev, newCategory]);
+      if (onCreate) onCreate(newCategory);
+    }
     setName("");
     setOpen(false);
   }
