@@ -11,7 +11,7 @@ export interface Product {
   stock: number;
   id_externo?: string;
   sku: string;
-  categoria_id?: number;
+  category: Category;
 }
 
 export interface Movement {
