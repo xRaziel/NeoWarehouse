@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { Category } from "../types";
 import { crearCategoria } from "../services/category";
+import { useSnackbar } from "./Snackbar";
 
 type Props = {
   categories?: Category[];
@@ -11,20 +12,26 @@ export default function CategoryManager({ categories = [], onCreate }: Props) {
   const [list, setList] = useState<Category[]>(categories);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     setList(categories);
   }, [categories]);
 
   async function add() {
-    if (!name.trim()) return;
-    const newCategory = await crearCategoria(name.trim());
-    if(newCategory && newCategory.id){
-      setList(prev => [...prev, newCategory]);
-      if (onCreate) onCreate(newCategory);
+    try {
+      if (!name.trim()) return;
+      const newCategory = await crearCategoria(name.trim());
+      if(newCategory && newCategory.id){
+        setList(prev => [...prev, newCategory]);
+        if (onCreate) onCreate(newCategory);
+        showSnackbar("Categoría creada");
+      }
+      setName("");
+      setOpen(false);
+    } catch (error) {
+      showSnackbar("Error al crear la categoría");
     }
-    setName("");
-    setOpen(false);
   }
 
   return (

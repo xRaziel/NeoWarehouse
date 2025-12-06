@@ -6,6 +6,7 @@ import { actualizarProducto } from '../services/product';
 import type { Product } from '../types';
 import CategoryManager from '../shared/CategoryManager';
 import ProductForm from '../shared/ProductForm';
+import { useSnackbar } from '../shared/Snackbar';
 
 export default function ProductsPage() {
 
@@ -13,6 +14,8 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   //const didFetchRef = useRef(false);
+
+  const { showSnackbar } = useSnackbar();
 
   async function loadData() {
     setLoading(true);
@@ -40,16 +43,22 @@ export default function ProductsPage() {
   const filtered = !query ? products : products.filter(p => p.nombre.toLowerCase().includes(query.toLowerCase()) || p.category.nombre.toLowerCase().includes(query.toLowerCase()));
 
   async function save(product: Partial<Product>) {
-    if (product.id) {
-      // update existing
-      await actualizarProducto(product as Product);
-    } else {
-      // create new
-      await crearProducto(product as Omit<Product, "id">);
+    try {
+      if (product.id) {
+        // update existing
+        await actualizarProducto(product as Product);
+        showSnackbar("Producto actualizado");
+      } else {
+        // create new
+        await crearProducto(product as Omit<Product, "id">);
+        showSnackbar("Producto creado");
+      }
+      await loadData();
+      setOpenForm(false);
+      setEditing(null);
+    } catch (error) {
+      showSnackbar("Error al guardar el producto");
     }
-    await loadData();
-    setOpenForm(false);
-    setEditing(null);
   }
 
   return (
