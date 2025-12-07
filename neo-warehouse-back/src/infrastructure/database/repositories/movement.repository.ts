@@ -13,7 +13,7 @@ export class MovementRepository {
     ) {}
 
     async obtainAllMovements(): Promise<Movement[]> {
-        return this.movementRepository.find();
+        return this.movementRepository.find({relations: ['producto', 'tipoMovimiento'], order: { fecha: 'DESC' } });
     }
 
     async createMovement(movementData: Partial<Movement>): Promise<Movement> {

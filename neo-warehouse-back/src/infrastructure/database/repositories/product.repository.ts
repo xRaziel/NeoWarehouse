@@ -20,6 +20,10 @@ export class ProductRepository {
         return this.productRepository.findOne({ where: { sku: sku }, relations: ['category'] });
     }
 
+    async findProductById(id: string): Promise<Product | null> {
+        return this.productRepository.findOne({ where: { id: id }, relations: ['category'] });
+    }
+
     async findProductsByCategory(categoryName: string): Promise<Product[]> {
         return this.productRepository.createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category')
