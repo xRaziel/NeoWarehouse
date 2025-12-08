@@ -16,4 +16,7 @@ export class MovementTypeRepository {
     async findMovementTypeByName(name: string): Promise<MovementType | null> {
         return this.movementTypeRepository.findOne({ where: { tipo: name } });
     }
+    async obtainAllMovementTypes(): Promise<MovementType[]> {
+        return this.movementTypeRepository.find();
+    }
 }

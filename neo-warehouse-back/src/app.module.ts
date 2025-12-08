@@ -8,6 +8,7 @@ import { getDatabaseConfig } from './config/database.config';
 import { MovementsModule } from './modules/movements/movements.module';
 import { ProductModule } from './modules/product/product.module';
 import { CategoryModule } from './modules/category/category.module';
+import { TypeMovementsModule } from './modules/type-movements/type-movements.module';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { CategoryModule } from './modules/category/category.module';
     }),
     ProductModule, 
     MovementsModule, 
-    IntegrationModule, ProductModule, CategoryModule
+    IntegrationModule, ProductModule, CategoryModule, TypeMovementsModule
   ],
   controllers: [
     AppController
