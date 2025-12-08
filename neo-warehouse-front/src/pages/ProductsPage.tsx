@@ -88,7 +88,7 @@ export default function ProductsPage() {
             </thead>
             <tbody>
               {filtered.map(p => (
-                <tr key={p.id} className="border-t">
+                <tr key={p.id} className="border-t border-gray-200">
                   <td className="px-4 py-3">{p.nombre}</td>
                   <td className="px-4 py-3">{p.category.nombre}</td>
                   <td className="px-4 py-3">${p.precio}</td>

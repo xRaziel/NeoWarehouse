@@ -14,6 +14,10 @@ export interface Product {
   category: Category;
 }
 
+export interface MovementType {
+  id: number;
+  tipo: string;
+}
 export interface Movement {
   id: number;
   cantidad: number;
@@ -21,12 +25,12 @@ export interface Movement {
   user: string;
   producto_id: number;
   tipo_movimiento_id: number;
+  tipoMovimiento: MovementType;
+  producto: Product;
+  nota: string;
 }
 
-export interface MovementType {
-  id: number;
-  nombre: string;
-}
+
 
 export interface ApiResponse<T> {
   data: T;
