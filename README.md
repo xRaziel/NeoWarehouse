@@ -207,9 +207,6 @@ cd neo-warehouse-front
 # Instalar dependencias
 npm install
 
-# Copiar archivo de variables de entorno
-cp .env.example .env
-
 # Editar .env si es necesario (por defecto apunta a localhost:3000)
 # nano .env
 ```
