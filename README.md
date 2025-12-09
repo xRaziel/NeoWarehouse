@@ -51,7 +51,7 @@ Asegúrate de tener instalado:
 ### 1. Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/neowarehouse.git
+git clone https://github.com/xRaziel/neowarehouse.git
 cd neowarehouse
 ```
 
