@@ -6,6 +6,7 @@ import { CategoryRepository } from 'src/infrastructure/database/repositories/cat
 import { MovementsService } from '../movements/movements.service';
 import { CreateMovementDto } from '../movements/dto/create-movement.dto';
 import { MovementTypeRepository } from 'src/infrastructure/database/repositories/movementType.repository';
+import { Category } from 'src/infrastructure/database/entities/category.entity';
 
 @Injectable()
 export class ProductService {
@@ -61,14 +62,40 @@ export class ProductService {
         throw new Error('ID is required for updating a product');
     }
 
+    const existingProduct = await this.productRepository.findProductById(product.id);
+    if (!existingProduct) {
+      throw new Error('Product not found');
+    }
+
+    const changedFields: string[] = [];
+    const trackChange = <T>(label: string, newValue: T | undefined, currentValue: T | undefined) => {
+      if (newValue !== undefined && newValue !== currentValue) {
+        changedFields.push(label);
+      }
+    };
+
+    trackChange('Nombre', product.nombre, existingProduct.nombre);
+    trackChange('Precio', product.precio, existingProduct.precio);
+    trackChange('Stock', product.stock, existingProduct.stock);
+    trackChange('Id Externo', product.idExterno, existingProduct.idExterno);
+    trackChange('SKU', product.sku, existingProduct.sku);
+
+    const newCategoryId = (product.category as Category | undefined)?.id;
+    const currentCategoryId = existingProduct.category?.id;
+    if (newCategoryId !== undefined && newCategoryId !== currentCategoryId) {
+      changedFields.push('Categoria');
+    }
+
     const movement = new CreateMovementDto();
     const tipoMovimiento = await this.movementTypeRepository.findMovementTypeByName('Ajuste');
     movement.producto_id = product.id;
-    movement.cantidad = undefined;
+    movement.cantidad = product.stock ?? undefined;
     movement.fecha = new Date();
     movement.tipo_movimiento_id = tipoMovimiento ? tipoMovimiento.id : '';
     movement.user = 'User';
-    movement.nota = 'Ajuste de producto';
+    movement.nota = changedFields.length
+      ? `Ajuste de producto - Campos cambiados: ${changedFields.join(', ')}`
+      : 'Ajuste de producto - Sin cambios detectados';
 
     await this.movementsService.createMovement(movement);
 

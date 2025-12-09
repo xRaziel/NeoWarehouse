@@ -36,7 +36,7 @@ export default function MovementForm({ products = [], movementTypes = [], onSave
       tipo_movimiento_id: tipoMovimientoId!,
       nota: nota.trim(),
       fecha: new Date().toISOString(),
-      user: 'Usuario actual', // TODO: Reemplazar con usuario real
+      user: 'User', // TODO: Reemplazar con usuario real
     };
 
     onSave(payload);

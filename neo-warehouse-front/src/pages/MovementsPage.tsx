@@ -103,6 +103,7 @@ function MovementsPage() {
               <th className="px-4 py-3 text-xs text-gray-500">Tipo</th>
               <th className="px-4 py-3 text-xs text-gray-500">Cantidad</th>
               <th className="px-4 py-3 text-xs text-gray-500">Nota</th>
+              <th className="px-4 py-3 text-xs text-gray-500">Usuario</th>
             </tr>
           </thead>
           <tbody>
@@ -112,7 +113,8 @@ function MovementsPage() {
                 <td className="px-4 py-3">{m.producto.nombre}</td>
                 <td className="px-4 py-3">{m.tipoMovimiento.tipo}</td>
                 <td className="px-4 py-3">{m.cantidad === -1 ? 'No aplica' : m.cantidad}</td>
-                <td className="px-4 py-3">{m.nota}</td>
+                <td className="px-4 py-3">{m.nota.length === 0 ? '-' : m.nota}</td>
+                <td className="px-4 py-3">{m.user}</td>
               </tr>
             ))}
           </tbody>
