@@ -9,7 +9,7 @@ export class Movement {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({name: 'cantidad', nullable: true})
+    @Column({name: 'cantidad'})
     cantidad: number;
 
     @Column({name: 'fecha'})
