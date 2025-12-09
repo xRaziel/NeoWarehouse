@@ -23,6 +23,17 @@ export class MovementsController {
     }
   }
 
+  @Get("/getCantLastMonthMovements")
+  @ApiOperation({ summary: 'Retrieve movements from the last month' })
+  async getLastMonthMovements() {
+    try{
+      const movements = await this.movementsService.getLastMonthMovements();
+      return { status: 'success', data: movements.length };
+    } catch (error) {
+      return { status: 'error', message: error.message };
+    }
+  }
+
   @Post("/createMovement")
   @ApiOperation({ summary: 'Create a new movement' })
   async createMovement(@Body() createMovementDto: CreateMovementDto) {

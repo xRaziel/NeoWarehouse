@@ -28,3 +28,12 @@ export const crearMovimiento = async (movimiento: Omit<Movement, "id">) => {
     return data;
     
 };
+
+export const getCantUltimoMesMovimientos = async () => {
+    const response = await fetch(`${API_URL}/movements/getCantLastMonthMovements`);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Error al obtener la cantidad de movimientos del último mes');
+    }
+    return data;
+};

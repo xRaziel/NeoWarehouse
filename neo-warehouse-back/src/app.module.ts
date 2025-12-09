@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IntegrationModule } from './integration/integration.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -26,7 +25,7 @@ import { TypeMovementsModule } from './modules/type-movements/type-movements.mod
     IntegrationModule, ProductModule, CategoryModule, TypeMovementsModule
   ],
   controllers: [
-    AppController
+    
   ],
   providers: [
     AppService

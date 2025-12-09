@@ -21,4 +21,13 @@ export class MovementRepository {
         return this.movementRepository.save(newMovement);
     }
 
+    async findMovementsAfterDate(date: Date): Promise<Movement[]> {
+        return this.movementRepository.createQueryBuilder('movement')
+            .leftJoinAndSelect('movement.producto', 'producto')
+            .leftJoinAndSelect('movement.tipoMovimiento', 'tipoMovimiento')
+            .where('movement.fecha > :date', { date: date.toISOString() })
+            .orderBy('movement.fecha', 'DESC')
+            .getMany();
+    }
+
 }

@@ -22,6 +22,11 @@ export class ProductService {
     return await this.productRepository.obtainAllProducts();
   }
 
+  async getAllStocks() : Promise<number> {
+    const products =  await this.productRepository.obtainAllProducts();
+    return products.reduce((total, product) => total + product.stock, 0);
+  }
+
   async getProductBySKU(sku: string) : Promise<Product | null> {
     return await this.productRepository.findProductBySKU(sku);
   }

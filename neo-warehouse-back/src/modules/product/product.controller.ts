@@ -22,6 +22,29 @@ export class ProductController {
     }
   }
 
+  @Get("/getCountProducts")
+  @ApiOperation({ summary: 'Retrieve total count of products' })
+  async getCountProducts() {
+    try{
+      const products = await this.productService.getAllProducts();
+      const count = products.length;
+      return { status: 'success', data: { count } };
+    } catch (error) {
+      return { status: 'error', message: error.message };
+    }
+  }
+
+  @Get("/getStockProducts")
+  @ApiOperation({ summary: 'Retrieve total stock of all products' })
+  async getStockProducts() {
+    try{
+      const totalStock = await this.productService.getAllStocks();
+      return { status: 'success', data: { totalStock } };
+    } catch (error) {
+      return { status: 'error', message: error.message };
+    }
+  }
+
   @Get("/getProductBySKU/:sku")
   @ApiOperation({ summary: 'Retrieve a product by SKU' })
   @ApiParam({ name: 'sku', description: 'Product SKU', example: 'SKU123' })

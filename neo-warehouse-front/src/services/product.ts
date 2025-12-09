@@ -40,3 +40,21 @@ export const actualizarProducto = async (producto: Product) => {
   }
   return data;
 };
+
+export const getCantProductos = async () => {
+    const response = await fetch(`${API_URL}/product/getCountProducts`);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Error al obtener la cantidad de productos en stock');
+    }
+    return data;
+};
+
+export const getStockTotal = async () => {
+    const response = await fetch(`${API_URL}/product/getStockProducts`);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Error al obtener el stock total de productos');
+    }
+    return data;
+};

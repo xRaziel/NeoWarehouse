@@ -20,6 +20,12 @@ export class MovementsService {
     return await this.movementRepository.obtainAllMovements();
   }
 
+  async getLastMonthMovements() {
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    return await this.movementRepository.findMovementsAfterDate(oneMonthAgo);
+  }
+
   async createMovement(createMovementDto: CreateMovementDto) {
     try {
       const product = await this.productRepository.findProductById(createMovementDto.producto_id);
