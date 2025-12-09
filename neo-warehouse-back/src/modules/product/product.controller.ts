@@ -14,7 +14,7 @@ export class ProductController {
     try{
       const products = await this.productService.getAllProducts();
       if (!products || products.length === 0) {
-        return { status: 'success', data: [], message: 'No products found' };
+        return { status: 'success', data: [], message: 'No se encontraron productos' };
       }
       return { status: 'success', data: products };
     } catch (error) {
@@ -52,13 +52,13 @@ export class ProductController {
     try{
       // Validar que SKU no esté vacío
       if (!sku || sku.trim().length === 0) {
-        throw new BadRequestException('SKU cannot be empty');
+        throw new BadRequestException('El SKU no puede estar vacío');
       }
 
       const product = await this.productService.getProductBySKU(sku.trim());
       
       if (!product) {
-        throw new NotFoundException(`Product with SKU "${sku}" not found`);
+        throw new NotFoundException(`Producto con SKU "${sku}" no encontrado`);
       }
 
       return { status: 'success', data: product };
@@ -74,14 +74,14 @@ export class ProductController {
     try{
       // Validar que category no esté vacío
       if (!category || category.trim().length === 0) {
-        throw new BadRequestException('Category cannot be empty');
+        throw new BadRequestException('La categoría no puede estar vacía');
       }
 
 
       const products = await this.productService.getProductsByCategory(category.trim());
       
       if (!products || products.length === 0) {
-        throw new NotFoundException(`No products found for category "${category}"`);
+        throw new NotFoundException(`No se encontraron productos para la categoría "${category}"`);
       }
 
       return { status: 'success', data: products };
@@ -96,23 +96,23 @@ export class ProductController {
     try{
 
       if (!body.nombre || body.nombre.trim().length === 0) {
-        throw new BadRequestException('Product name cannot be empty');
+        throw new BadRequestException('El nombre del producto no puede estar vacío');
       }
 
       if (!body.precio || body.precio <= 0) {
-        throw new BadRequestException('Product price must be greater than zero');
+        throw new BadRequestException('El precio del producto debe ser mayor que cero');
       }
 
       if (!body.stock || body.stock < 0) {
-        throw new BadRequestException('Product stock cannot be negative');
+        throw new BadRequestException('El stock del producto no puede ser negativo');
       }
 
       if (!body.sku || body.sku.trim().length === 0) {
-        throw new BadRequestException('Product SKU cannot be empty');
+        throw new BadRequestException('El SKU del producto no puede estar vacío');
       }
 
       if (body.categoria_id && body.categoria_id.trim().length === 0) {
-        throw new BadRequestException('Product category ID cannot be empty if provided');
+        throw new BadRequestException('El ID de categoría del producto no puede estar vacío si se proporciona');
       }
 
       const newProduct = await this.productService.createProduct(body);
@@ -130,17 +130,17 @@ export class ProductController {
     try{
       // Validar que SKU no esté vacío
       if (!sku || sku.trim().length === 0) {
-        throw new BadRequestException('SKU cannot be empty');
+        throw new BadRequestException('El SKU no puede estar vacío');
       }
 
       if (newStock < 0) {
-        throw new BadRequestException('New stock quantity cannot be negative');
+        throw new BadRequestException('La nueva cantidad de stock no puede ser negativa');
       }
 
       const updatedProduct = await this.productService.updateProductStock(sku.trim(), newStock);
       
       if (!updatedProduct) {
-        throw new NotFoundException(`Product with SKU "${sku}" not found`);
+        throw new NotFoundException(`Producto con SKU "${sku}" no encontrado`);
       }
 
       return { status: 'success', data: updatedProduct };
@@ -156,12 +156,12 @@ export class ProductController {
     try{
       // Validar que SKU no esté vacío
       if (!sku || sku.trim().length === 0) {
-        throw new BadRequestException('SKU cannot be empty');
+        throw new BadRequestException('El SKU no puede estar vacío');
       }
 
       await this.productService.deleteProduct(sku.trim());
 
-      return { status: 'success', message: `Product with SKU "${sku}" has been deleted` };
+      return { status: 'success', message: `Producto con SKU "${sku}" ha sido eliminado` };
     } catch (error) {
       return { status: 'error', message: error.message };
     }
@@ -173,11 +173,11 @@ export class ProductController {
     try{
 
       if (!body.sku || body.sku.trim().length === 0) {
-        throw new BadRequestException('Product SKU cannot be empty');
+        throw new BadRequestException('El SKU del producto no puede estar vacío');
       }
       const updatedProduct = await this.productService.updateProduct(body);
       if (!updatedProduct) {
-        throw new NotFoundException(`Product with SKU "${body.sku}" not found`);
+        throw new NotFoundException(`Producto con SKU "${body.sku}" no encontrado`);
       }
       return { status: 'success', data: updatedProduct };
     } catch (error) {

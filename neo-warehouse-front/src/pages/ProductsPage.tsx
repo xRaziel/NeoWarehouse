@@ -62,7 +62,7 @@ export default function ProductsPage() {
       setOpenForm(false);
       setEditing(null);
     } catch (error) {
-      showSnackbar("Error al guardar el producto");
+      showSnackbar(error instanceof Error ? error.message : 'Error al guardar el producto');
     }
   }
 

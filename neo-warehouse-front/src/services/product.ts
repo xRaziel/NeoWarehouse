@@ -4,8 +4,8 @@ import type { Product } from "../types";
 export const obtenerProductos = async () => {
   const response = await fetch(`${API_URL}/product/getAllProducts`);
   const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'Error al obtener los productos');
+  if (data.status === 'error' || !response.ok) {
+    throw new Error(data.message);
   }
   return data;
 };
@@ -20,7 +20,7 @@ export const crearProducto = async (producto: Omit<Product, "id">) => {
     body: JSON.stringify(producto),
   });
   const data = await response.json();
-  if (!response.ok) {
+  if (data.status === 'error' || !response.ok) {
     throw new Error(data.message || 'Error al crear el producto');
   }
   return data;
@@ -35,7 +35,7 @@ export const actualizarProducto = async (producto: Product) => {
     body: JSON.stringify(producto),
   });
   const data = await response.json();
-  if (!response.ok) {
+  if (data.status === 'error' || !response.ok) {
     throw new Error(data.message || 'Error al actualizar el producto');
   }
   return data;
@@ -44,7 +44,7 @@ export const actualizarProducto = async (producto: Product) => {
 export const getCantProductos = async () => {
     const response = await fetch(`${API_URL}/product/getCountProducts`);
     const data = await response.json();
-    if (!response.ok) {
+    if (data.status === 'error' || !response.ok) {
         throw new Error(data.message || 'Error al obtener la cantidad de productos en stock');
     }
     return data;
@@ -53,7 +53,7 @@ export const getCantProductos = async () => {
 export const getStockTotal = async () => {
     const response = await fetch(`${API_URL}/product/getStockProducts`);
     const data = await response.json();
-    if (!response.ok) {
+    if (data.status === 'error' || !response.ok) {
         throw new Error(data.message || 'Error al obtener el stock total de productos');
     }
     return data;

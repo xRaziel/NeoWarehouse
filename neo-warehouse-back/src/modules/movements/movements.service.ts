@@ -30,26 +30,26 @@ export class MovementsService {
     try {
       const product = await this.productRepository.findProductById(createMovementDto.producto_id);
       if (!product) {
-        throw new Error(`Product with SKU "${createMovementDto.producto_id}" not found`);
+        throw new Error(`Producto con SKU "${createMovementDto.producto_id}" no encontrado`);
       }
       const tipoMovimiento = await this.movementTypeRepository.findMovementTypeById(createMovementDto.tipo_movimiento_id);
 
       if (!tipoMovimiento) {
-        throw new Error(`Movement type "${createMovementDto.tipo_movimiento_id}" not found`);
+        throw new Error(`Tipo de movimiento "${createMovementDto.tipo_movimiento_id}" no encontrado`);
       }
 
       if (tipoMovimiento.tipo === 'Entrada') {
         product.stock += createMovementDto.cantidad ?? 0;
       } else if (tipoMovimiento.tipo === 'Salida') {
         if (product.stock < (createMovementDto.cantidad ?? 0)) {
-          throw new Error(`Insufficient stock for product with SKU "${createMovementDto.producto_id}"`);
+          throw new Error(`Stock insuficiente para el producto con SKU "${createMovementDto.producto_id}"`);
         }
         product.stock -= createMovementDto.cantidad ?? 0;
       } else if (tipoMovimiento.tipo === 'Ajuste') {
         product.stock = createMovementDto.cantidad ?? product.stock;
       }
       else {
-        throw new Error(`Invalid movement type "${tipoMovimiento.tipo}"`);
+        throw new Error(`Tipo de movimiento inválido "${tipoMovimiento.tipo}"`);
       }
 
       await this.productRepository.updateProduct(product);

@@ -12,6 +12,7 @@ export default function ProductForm({ initial = null, categories = [], onSave, o
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState<number | ''>('');
   const [sku, setSku] = useState('');
+  const [stock, setStock] = useState<number | ''>('');
   const [categoriaId, setCategoriaId] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
 
@@ -20,16 +21,16 @@ export default function ProductForm({ initial = null, categories = [], onSave, o
       setNombre('');
       setPrecio('');
       setSku('');
+      setStock('');
       setCategoriaId(null);
       setErrors({});
       return;
     }
 
-    // populate with initial product data for editing
     setNombre(initial.nombre ?? '');
     setPrecio(initial.precio ?? '');
     setSku(initial.sku ?? '');
-    // products from API include `category` object but not `categoria_id` — use category.id when present
+    setStock(initial.stock ?? '');
     const maybeId = initial.category?.id ?? null;
     setCategoriaId(maybeId !== null ? String(maybeId) : null);
     setErrors({});
@@ -40,6 +41,8 @@ export default function ProductForm({ initial = null, categories = [], onSave, o
     if (!nombre.trim()) err.nombre = 'El nombre es obligatorio';
     if (precio === '' || precio === null || Number.isNaN(Number(precio))) err.precio = 'Precio inválido';
     if (!sku.trim()) err.sku = 'SKU es obligatorio';
+    // Solo validar stock si es creación (no hay initial)
+    if (!initial && (stock === '' || stock === null || Number.isNaN(Number(stock)))) err.stock = 'Stock inválido';
     if (categoriaId == null) err.category = 'Debes seleccionar una categoría';
     setErrors(err);
     return Object.keys(err).length === 0;
@@ -56,6 +59,8 @@ export default function ProductForm({ initial = null, categories = [], onSave, o
       nombre: nombre.trim(),
       precio: Number(precio),
       sku: sku.trim(),
+      // Solo incluir stock si es creación (no hay initial)
+      ...((!initial && stock !== '') ? { stock: Number(stock) } : {}),
       category: selectedCategory as Category | undefined,
     };
 
@@ -75,6 +80,19 @@ export default function ProductForm({ initial = null, categories = [], onSave, o
           <label className="block text-sm font-medium mb-1">Precio</label>
           <input type="number" step="0.01" value={precio as any} onChange={e => setPrecio(e.target.value === '' ? '' : Number(e.target.value))} className={`w-full p-2 border rounded ${errors.precio ? 'border-red-500' : ''}`} />
           {errors.precio && <div className="text-xs text-red-600 mt-1">{errors.precio}</div>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Stock</label>
+          <input 
+            type="number" 
+            value={stock as any} 
+            onChange={e => setStock(e.target.value === '' ? '' : Number(e.target.value))} 
+            disabled={!!initial}
+            className={`w-full p-2 border rounded ${errors.stock ? 'border-red-500' : ''} ${initial ? 'bg-gray-100 cursor-not-allowed' : ''}`} 
+          />
+          {errors.stock && <div className="text-xs text-red-600 mt-1">{errors.stock}</div>}
+          {initial && <div className="text-xs text-gray-500 mt-1">Si desea editar el stock, por favor utilice la sección de movimientos</div>}
         </div>
       </div>
 
