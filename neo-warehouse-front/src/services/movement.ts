@@ -11,15 +11,6 @@ export const obtenerMovimientos = async () => {
     return data;
 };
 
-export const obtenerTiposMovimiento = async () => {
-    const response = await fetch(`${API_URL}/movements/getMovementTypes`);
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Error al obtener los tipos de movimiento');
-    }
-    return data;
-};
-
 export const crearMovimiento = async (movimiento: Omit<Movement, "id">) => {
 
     const response = await fetch(`${API_URL}/movements/createMovement`, {

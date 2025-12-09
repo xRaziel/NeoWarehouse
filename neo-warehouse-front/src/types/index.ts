@@ -23,8 +23,8 @@ export interface Movement {
   cantidad: number;
   fecha: string;
   user: string;
-  producto_id: number;
-  tipo_movimiento_id: number;
+  producto_id: string;
+  tipo_movimiento_id: string;
   tipoMovimiento: MovementType;
   producto: Product;
   nota: string;

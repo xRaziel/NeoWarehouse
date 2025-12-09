@@ -46,8 +46,8 @@ export class ProductRepository {
     }
 
     async updateProduct(productData: Partial<Product>): Promise<Product | null> {
-        const sku = productData.sku;
-        const product = await this.findProductBySKU(sku!);
+        const id = productData.id;
+        const product = await this.findProductById(id!);
         if (!product) {
             return null;
         }

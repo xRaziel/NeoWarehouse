@@ -5,6 +5,7 @@ import { obtenerMovimientos } from '../services/movement';
 import { crearMovimiento } from '../services/movement';
 import { obtenerProductos } from '../services/product';
 import MovementForm from '../shared/MovementForm';
+import { obtenerTiposMovimiento } from '../services/movementType';
 
 function MovementsPage() {
   const [movements, setMovements] = useState<Movement[]>([]);
@@ -19,28 +20,22 @@ function MovementsPage() {
     setLoading(true);
     try {
       // Cargar movimientos y productos en paralelo
-      const [movementsData, productsData] = await Promise.all([
+      const [movementsData, productsData, movementTypesData] = await Promise.all([
         obtenerMovimientos(),
-        obtenerProductos()
+        obtenerProductos(),
+        obtenerTiposMovimiento()
       ]);
       
       if (movementsData && Array.isArray(movementsData.data)) {
         setMovements(movementsData.data);
-        
-        // Extraer tipos de movimiento únicos de los datos
-        const types = Array.from(
-          new Map(
-            movementsData.data
-              .map(m => m.tipoMovimiento)
-              .filter(t => t)
-              .map(t => [t.id, t])
-          ).values()
-        );
-        setMovementTypes(types);
       }
       
       if (productsData && Array.isArray(productsData.data)) {
         setProducts(productsData.data);
+      }
+
+      if (movementTypesData && Array.isArray(movementTypesData.data)) {
+        setMovementTypes(movementTypesData.data);
       }
     } catch (error) {
       showSnackbar("Error al cargar los datos");
@@ -98,7 +93,7 @@ function MovementsPage() {
                 <td className="px-4 py-3">{new Date(m.fecha).toLocaleDateString()}</td>
                 <td className="px-4 py-3">{m.producto.nombre}</td>
                 <td className="px-4 py-3">{m.tipoMovimiento.tipo}</td>
-                <td className="px-4 py-3">{m.cantidad}</td>
+                <td className="px-4 py-3">{m.cantidad === -1 ? 'No aplica' : m.cantidad}</td>
                 <td className="px-4 py-3">{m.nota}</td>
               </tr>
             ))}

@@ -6,6 +6,12 @@ import { ProductRepository } from 'src/infrastructure/database/repositories/prod
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from 'src/infrastructure/database/entities/category.entity';
 import { Product } from 'src/infrastructure/database/entities/product.entity';
+import { MovementsModule } from '../movements/movements.module';
+import { MovementRepository } from 'src/infrastructure/database/repositories/movement.repository';
+import { MovementTypeRepository } from 'src/infrastructure/database/repositories/movementType.repository';
+import { Movement } from 'src/infrastructure/database/entities/movement.entity';
+import { MovementType } from 'src/infrastructure/database/entities/type-movement.entity';
+import { MovementsService } from '../movements/movements.service';
 
 @Module({
   controllers: [ProductController],
@@ -13,12 +19,18 @@ import { Product } from 'src/infrastructure/database/entities/product.entity';
     ProductService,
     CategoryRepository,
     ProductRepository,
+    MovementRepository,
+    MovementTypeRepository,
+    MovementsService
   ],
   imports: [
     TypeOrmModule.forFeature([
       Category,
-      Product
+      Product,
+      Movement,
+      MovementType
     ]),
+    MovementsModule
   ],
 })
 export class ProductModule {}

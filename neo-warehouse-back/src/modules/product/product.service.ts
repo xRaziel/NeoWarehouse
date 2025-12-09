@@ -3,6 +3,9 @@ import { Product } from 'src/infrastructure/database/entities/product.entity';
 import { ProductRepository } from 'src/infrastructure/database/repositories/product.repository';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CategoryRepository } from 'src/infrastructure/database/repositories/category.repository';
+import { MovementsService } from '../movements/movements.service';
+import { CreateMovementDto } from '../movements/dto/create-movement.dto';
+import { MovementTypeRepository } from 'src/infrastructure/database/repositories/movementType.repository';
 
 @Injectable()
 export class ProductService {
@@ -10,6 +13,8 @@ export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly categoryRepository: CategoryRepository,
+    private readonly movementsService: MovementsService,
+    private readonly movementTypeRepository: MovementTypeRepository
   ) {}
 
   async getAllProducts() : Promise<Product[]> {
@@ -51,10 +56,22 @@ export class ProductService {
     return this.productRepository.removeProduct(sku);
   }
 
-  async updateProduct(product: Partial<Product>) : Promise<Product | null> {
-    if (!product.sku) {
-        throw new Error('SKU is required for updating a product');
+  async updateProduct(product: Partial<Product>) : Promise<Product | null> {    
+    if (!product.id) {
+        throw new Error('ID is required for updating a product');
     }
+
+    const movement = new CreateMovementDto();
+    const tipoMovimiento = await this.movementTypeRepository.findMovementTypeByName('Ajuste');
+    movement.producto_id = product.id;
+    movement.cantidad = undefined;
+    movement.fecha = new Date();
+    movement.tipo_movimiento_id = tipoMovimiento ? tipoMovimiento.id : '';
+    movement.user = 'User';
+    movement.nota = 'Ajuste de producto';
+
+    await this.movementsService.createMovement(movement);
+
     return this.productRepository.updateProduct(product);
   }
 

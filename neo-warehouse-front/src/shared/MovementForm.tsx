@@ -32,11 +32,11 @@ export default function MovementForm({ products = [], movementTypes = [], onSave
 
     const payload: Partial<Movement> = {
       cantidad: Number(cantidad),
-      producto_id: Number(productoId),
-      tipo_movimiento_id: Number(tipoMovimientoId),
+      producto_id: productoId!,
+      tipo_movimiento_id: tipoMovimientoId!,
       nota: nota.trim(),
       fecha: new Date().toISOString(),
-      user: 'Usuario actual', // Ajusta según tu sistema de autenticación
+      user: 'Usuario actual', // TODO: Reemplazar con usuario real
     };
 
     onSave(payload);
@@ -66,19 +66,21 @@ export default function MovementForm({ products = [], movementTypes = [], onSave
 
       <div>
         <label className="block text-sm font-medium mb-1">Tipo de movimiento</label>
-        <select
-          value={tipoMovimientoId ?? ''}
-          onChange={e => {
-            const v = e.target.value;
-            if (v === '') return setTipoMovimientoId(null);
-            setTipoMovimientoId(v);
-          }}
-          className={`w-full p-2 border rounded ${errors.tipoMovimiento ? 'border-red-500' : ''}`}>
-          <option value="">-- Selecciona tipo --</option>
-          {movementTypes.map(t => (
-            <option key={t.id} value={t.id}>{t.tipo}</option>
-          ))}
-        </select>
+      <select
+        value={tipoMovimientoId ?? ''}
+        onChange={e => {
+          const v = e.target.value;
+          if (v === '') return setTipoMovimientoId(null);
+          setTipoMovimientoId(v);
+        }}
+        className={`w-full p-2 border rounded ${errors.tipoMovimiento ? 'border-red-500' : ''}`}>
+        <option value="">-- Selecciona tipo --</option>
+        {movementTypes.map(t => (
+          <option key={t.id} value={t.id}>
+            {t.tipo}{t.tipo === 'Ajuste' ? ' (Ingrese nuevo stock en cantidad)' : ''}
+          </option>
+        ))}
+      </select>
         {errors.tipoMovimiento && <div className="text-xs text-red-600 mt-1">{errors.tipoMovimiento}</div>}
       </div>
 
