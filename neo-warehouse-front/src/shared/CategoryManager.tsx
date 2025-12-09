@@ -5,10 +5,11 @@ import { useSnackbar } from "./Snackbar";
 
 type Props = {
   categories?: Category[];
+  loading?: boolean;
   onCreate?: (category: Category) => void;
 };
 
-export default function CategoryManager({ categories = [], onCreate }: Props) {
+export default function CategoryManager({ categories = [], loading = false, onCreate }: Props) {
   const [list, setList] = useState<Category[]>(categories);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -45,11 +46,24 @@ export default function CategoryManager({ categories = [], onCreate }: Props) {
         </div>
 
         <div className="space-y-2">
-          {list.map(c => (
-            <div key={c.id} className="p-2 bg-gray-50 rounded flex justify-between">
-              <div>{c.nombre}</div>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="text-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p className="mt-2 text-sm text-gray-600">Cargando...</p>
+              </div>
             </div>
-          ))}
+          ) : list.length === 0 ? (
+            <div className="p-2 text-center text-gray-600 text-sm">
+              No hay categorías
+            </div>
+          ) : (
+            list.map(c => (
+              <div key={c.id} className="p-2 bg-gray-50 rounded flex justify-between">
+                <div>{c.nombre}</div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

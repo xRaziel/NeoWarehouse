@@ -65,6 +65,24 @@ function MovementsPage() {
     );
   }
 
+  if (movements.length === 0) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Historial de movimientos</h2>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setOpenForm(true)} className="px-3 py-2 bg-indigo-600 text-white rounded">
+              Nuevo movimiento
+            </button>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl shadow p-12 text-center">
+          <p className="text-gray-600 text-lg">No hay movimientos registrados</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-4">

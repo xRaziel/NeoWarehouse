@@ -14,7 +14,11 @@ export class CategoryRepository {
     ) {}
 
     async obtainAllCategories(): Promise<Category[]> {
-        return this.categoryRepository.find();
+        const categories = await this.categoryRepository.find({ order: { nombre: "ASC" } });
+        return categories.map(cat => ({
+            ...cat,
+            nombre: cat.nombre.charAt(0).toUpperCase() + cat.nombre.slice(1)
+        }));
     }
 
     async findCategoryByName(name: string): Promise<Category | null> {

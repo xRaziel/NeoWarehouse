@@ -17,7 +17,7 @@ export class MovementsController {
       if (!movements || movements.length === 0) {
         return { status: 'success', data: [], message: 'No movements found' };
       }
-      return { status: 'success', data: movements };
+      return { status: 'success', data: [] };
     } catch (error) {
       return { status: 'error', message: error.message };
     }

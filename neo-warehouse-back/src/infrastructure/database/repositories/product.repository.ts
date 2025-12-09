@@ -13,7 +13,18 @@ export class ProductRepository {
     ) {}
 
     async obtainAllProducts(): Promise<Product[]> {
-        return this.productRepository.find({ relations: ['category'], order: { nombre: 'ASC' } });
+        const products = await this.productRepository.find({ 
+            relations: ['category'], 
+            order: { nombre: 'ASC' } 
+        });
+        
+        return products.map(product => ({
+            ...product,
+            category: {
+                ...product.category,
+                nombre: product.category.nombre.charAt(0).toUpperCase() + product.category.nombre.slice(1)
+            }
+        }));
     }
 
     async findProductBySKU(sku: string): Promise<Product | null> {

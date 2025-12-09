@@ -1,11 +1,11 @@
 
 export interface Category {
-  id: number;
+  id: string;
   nombre: string;
 }
 
 export interface Product {
-  id: number;
+  id: string;
   nombre: string;
   precio: number;
   stock: number;
@@ -15,11 +15,11 @@ export interface Product {
 }
 
 export interface MovementType {
-  id: number;
+  id: string;
   tipo: string;
 }
 export interface Movement {
-  id: number;
+  id: string;
   cantidad: number;
   fecha: string;
   user: string;
